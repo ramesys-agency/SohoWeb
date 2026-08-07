@@ -1,0 +1,6 @@
+# TEMPORARY, remove together with the X-Robots-Tag header in nginx.conf once the
+# [[PLACEHOLDER]] values are filled in. The pages must stay publicly reachable
+# for App Review and for the legal links inside the app — they just should not
+# be indexed while the copy is unfinished.
+User-agent: *
+Disallow: /
