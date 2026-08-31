@@ -127,12 +127,12 @@ a real certificate.
 
 ```bash
 for p in / /support /legal/privacy /legal/terms /legal/returns \
-         /legal/shipping /legal/cancellation; do
+         /legal/shipping /legal/cancellation /legal/data-deletion; do
   curl -s -o /dev/null -w "$p -> %{http_code}\n" "https://www.soho-bd.com$p"
 done
 ```
 
-All seven must return `200` over **valid** HTTPS. A self-signed or expired
+All eight must return `200` over **valid** HTTPS. A self-signed or expired
 certificate fails both App Review and iOS ATS.
 
 ### Search engines are blocked until the placeholders are filled
@@ -169,13 +169,18 @@ copy:
 /legal/shipping  /legal/cancellation
 ```
 
+`/legal/data-deletion` is frozen for a different reason: it is registered with
+Meta as the Facebook Login data deletion instructions URL (see
+`CREDENTIALS_HANDOVER.md` §7.4). It is not compiled into the app bundle, but a
+404 there blocks the Meta app from going Live.
+
 They sit under `/legal/` deliberately. The e-commerce site that takes over
 `www.soho-bd.com` will want `/shipping`, `/returns` and the rest of the
 top-level namespace for its own pages, and a store route quietly shadowing a
 policy URL that is frozen inside shipped app binaries is not a problem you want
 to discover after review. `/legal/` is a prefix no storefront needs.
 
-That site must keep these five paths working or 301 them. Otherwise the legal
+That site must keep these six paths working or 301 them. Otherwise the legal
 links inside already-shipped apps break, and fixing that means a new build and
 another review cycle.
 
@@ -203,6 +208,8 @@ In App Store Connect:
 
 - **Privacy Policy URL** → `https://www.soho-bd.com/legal/privacy`
 - **Support URL** → `https://www.soho-bd.com/support`
+- Account deletion (Guideline 5.1.1(v)) is documented at
+  `https://www.soho-bd.com/legal/data-deletion`
 - **Marketing URL** (optional) → `https://www.soho-bd.com`
 
 ---
