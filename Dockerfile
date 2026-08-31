@@ -4,7 +4,7 @@ FROM nginx:1.27-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/site.conf
 
-COPY index.html support.html 404.html robots.txt /usr/share/nginx/html/
+COPY index.html support.html 404.html robots.txt google*.html /usr/share/nginx/html/
 
 # The policies live under /legal/ so the e-commerce site that replaces this one
 # keeps its top-level namespace free. These paths are compiled into app builds
