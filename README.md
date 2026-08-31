@@ -17,26 +17,26 @@ It exists to unblock three things at once:
 
 ---
 
-## 1. Placeholders: what's left
+## 1. Placeholders: filled in 1 September 2026
 
-Unconfirmed values are marked `[[LIKE THIS]]` and rendered with a yellow
-highlight, so they are impossible to miss when reading the pages. To list
-what's left:
+Unconfirmed values used to be marked `[[LIKE THIS]]` and rendered with a yellow
+highlight. The client supplied all five, so no page carries a placeholder any
+more. To confirm:
 
 ```bash
 grep -oh '\[\[[^]]*\]\]' *.html | sort -u
 ```
 
-Everything that could be established from the app and backend has been filled
-in (see the next section). **Five values remain, and all five need the client's
-own records** — nothing in the codebase can supply them:
+| Was | Now says | Also lives in |
+|---|---|---|
+| `[[REGISTERED LEGAL ENTITY NAME]]` | Soho BD | `EXPO_PUBLIC_LEGAL_ENTITY_NAME` in `SohoApplication/.env` and every EAS environment. Must match the Apple Developer Program enrollment. |
+| `[[REGISTERED BUSINESS ADDRESS]]` | Saba House, 2nd Floor, Plot-34, Road-46, Gulshan-2, Dhaka-1212 | The footer, the policies and App Review contact info. |
+| `[[REGISTRATION / TRADE LICENCE NO.]]` | TRAD/DNCC/050118/2025 | The About section on `index.html` only. The Digital Commerce Operation Guidelines, 2021 expect a digital-commerce business to publish its trade licence details. |
+| `[[SUPPORT PHONE]]` `[[SUPPORT WHATSAPP NUMBER]]` | +8801608399714 (one number for both) | `EXPO_PUBLIC_SUPPORT_PHONE` and `EXPO_PUBLIC_SUPPORT_WHATSAPP` — digits only, `8801608399714`, no `+`. These are what makes the app's "Request a Return" button work, so they must be set in the EAS environments too, not just the local `.env`. |
 
-| Placeholder | Notes |
-|---|---|
-| `[[REGISTERED LEGAL ENTITY NAME]]` | Exactly as government-registered. Must match the Apple Developer Program enrollment and the app's `EXPO_PUBLIC_LEGAL_ENTITY_NAME`. |
-| `[[REGISTERED BUSINESS ADDRESS]]` | Goes in the footer, the policies and App Review contact info. |
-| `[[REGISTRATION / TRADE LICENCE NO.]]` | On the About section. The Digital Commerce Operation Guidelines, 2021 expect a digital-commerce business to publish its trade licence details. |
-| `[[SUPPORT PHONE]]` `[[SUPPORT WHATSAPP NUMBER]]` | Blank in the app's `.env` too (`EXPO_PUBLIC_SUPPORT_PHONE`, `EXPO_PUBLIC_SUPPORT_WHATSAPP`). The app's "Request a Return" button does not work until the WhatsApp number is set, so this one blocks returns, not just the website. |
+Two follow-ups this unblocks: the `robots.txt` / `X-Robots-Tag` noindex block
+can be lifted (see below), and the `.tbd` rule in `assets/styles.css` is now
+unused.
 
 ### Values taken from the app and backend
 
@@ -206,7 +206,7 @@ Set these in `SohoApplication/.env`, then rebuild the app:
 
 ```
 EXPO_PUBLIC_LEGAL_BASE_URL=https://www.soho-bd.com/legal
-EXPO_PUBLIC_LEGAL_ENTITY_NAME=<registered entity name>
+EXPO_PUBLIC_LEGAL_ENTITY_NAME=Soho BD
 ```
 
 Note that `.env` is git-ignored and EAS builds from git, so these must also go
