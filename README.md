@@ -47,14 +47,14 @@ of them changes, the code and this site have to change together.
 |---|---|---|
 | Return window | 10 days | `ShippingTabContent.tsx` — "Hassle free 10 days Return & Exchange" |
 | Support hours | 10 AM – 8 PM | `SohoApplication/config/support.ts` |
-| Support email | support@soho-bd.com | The company domain. **`EXPO_PUBLIC_SUPPORT_EMAIL` still says `support@soho.com`** — see below |
+| Support email | sohoadminbd@gmail.com | `config/support.ts` and `EXPO_PUBLIC_SUPPORT_EMAIL` in all three EAS environments. `soho-bd.com` publishes no MX records, so no address on the domain can receive mail — see below |
 | Delivery charge | ৳150 flat, nationwide, no COD surcharge | `payment.tsx` (`shippingCharge = 150`) and `wardrobe/index.tsx` |
 | Delivery times | Next day inside Dhaka, within 3 days outside | Confirmed by the client, 7 August 2026. Both sit inside the Digital Commerce Operation Guidelines, 2021 limits of 5 days in-city / 10 days elsewhere. **The app still estimates 7 days** — `DELIVERY_ESTIMATE_DAYS` in `ShippingTabContent.tsx` |
 | Payment methods | Cash on delivery only | `checkout.tsx` — card, wallet and net banking are `enabled: false` |
 | Courier | RoadRush, and the networks it routes through including Pathao | `ROADRUSH_BASE_URL`, `location.service.ts` (`pathao_id`) |
 | Hosting | Microsoft Azure, Singapore region | `20.197.91.221` is a Microsoft-allocated address geolocating to Singapore |
 | File storage | Self-hosted on the same server, not a third-party service | `STORAGE=minio`, MinIO runs beside the backend in Coolify |
-| Email delivery | Google's mail servers | `SMTP_HOST=smtp.gmail.com` in the repo's `.env`. Production values are masked in Coolify — **confirm before relying on it** |
+| Email delivery | Resend | `RESEND_API_KEY` in the backend's `.env`, sent over the Resend HTTPS API. Production values are masked in Coolify — **confirm before relying on it** |
 | Order record retention | Five years | VAT and Supplementary Duty Act, 2012 record-keeping requirement |
 | Server log retention | Not archived; discarded on restart | `logger.service.ts` has a Console transport only — no file, no rotation |
 
@@ -68,10 +68,19 @@ of them changes, the code and this site have to change together.
    states the ৳150 charge on the assumption the backend gets fixed. If the
    decision is free delivery instead, change the Delivery charges table in
    `shipping.html` and the note in `cancellation.html`.
-2. **`EXPO_PUBLIC_SUPPORT_EMAIL` is `support@soho.com`**, a domain the company
-   does not own. The site publishes `support@soho-bd.com`. The mailbox has to
-   exist and the app's `.env` has to match before submission — App Review emails
-   a support address that bounces at its peril.
+2. ~~**`EXPO_PUBLIC_SUPPORT_EMAIL` is `support@soho.com`**~~ — **resolved
+   2026-08-31.** Three addresses were in play: the site published
+   `support@soho-bd.com`, the app shipped `support@soho.com` (a domain the
+   company does not own), and neither could receive mail — `soho-bd.com` has no
+   MX records at all, so the published address bounced. Rather than stand up a
+   forwarder or a Workspace seat, the decision was to make
+   `sohoadminbd@gmail.com` canonical: all 17 references across this site, the
+   `config/support.ts` fallback, `EXPO_PUBLIC_SUPPORT_EMAIL` in every EAS
+   environment, and the local `.env`. Both stores email the published support
+   address and check that someone answers, so whatever appears on the Play
+   listing, the App Store listing and the Google OAuth branding screen must be
+   this same Gmail. Standing up domain mail later is a superset of this change,
+   not a conflict with it.
 
 ### Business defaults chosen, worth a client sign-off
 
